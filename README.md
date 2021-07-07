@@ -10,12 +10,18 @@ Here, we use a conditional deep convolutional generative adversarial network (cD
 The following software is required to run the provided scripts. As of this writing, the versions below have been tested and verified. Training on GPU is recommended due to lengthy training times with GANs. 
 
 -Python 3.7
+
 -Pytorch 1.9.0
+
 -CUDA 10.2 (Recommended for training on GPU)
+
 -OpenCV 3.4.2 (Depends on Python 3.7, Python 3.8 is not supported as of this writing)
 -Scipy 1.6.2
+
 -Matplotlib
+
 -Pandas
+
 -Spyder 
 
 Installation instructions for Pytorch (with CUDA) are at: https://pytorch.org/. For convenience, here are installation commands for the Conda distribution (after installing Anaconda: https://www.anaconda.com/products/individual).
