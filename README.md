@@ -16,7 +16,7 @@ The following software is required to run the provided scripts. As of this writi
 Installation instructions for Pytorch (with CUDA) is at: https://pytorch.org/
 
 ## Steps
-### 1) Train the cDCGAN (DCGAN.py)
+### 1) Train the cDCGAN (DCGAN_Train.py)
 Download the files in the 'Training Data' folder and update lines 38, 41, and 44 in the 'DCGAN.py' file:
 ```python
 ## Define File Locations (Images, Spectra, and CNN Model Save)
@@ -25,3 +25,9 @@ save_dir = 'C:/.../model.h5'
 img_path = 'C:/.../*.png'
 ```
 Running this file will train the cDCGAN and save the model in the specified location. Depending on the available hardware, the training process can take up to a few hours.
+
+### 2) Load cDCGAN and Predict (DCGAN_Predict.py)
+
+### 3) Decode Image (DCGAN_Decode.py)
+
+### 4) Generate Simulation Model - Lumerical (DCGAN_FDTD.py)
