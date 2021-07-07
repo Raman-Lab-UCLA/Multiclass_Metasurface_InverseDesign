@@ -17,11 +17,11 @@ Installation instructions for Pytorch (with CUDA) is at: https://pytorch.org/
 
 ## Steps
 ### 1) Train the cDCGAN (DCGAN.py)
-Download the files in the 'Training Data' folder and update the following lines in the 'DCGAN.py' file:
+Download the files in the 'Training Data' folder and update lines 38, 41, and 44 in the 'DCGAN.py' file:
 ```python
 ## Define File Locations (Images, Spectra, and CNN Model Save)
-img_path = 'C:/.../*.png'
 spectra_path = 'C:/.../Spectra.csv'
 save_dir = 'C:/.../model.h5'
+img_path = 'C:/.../*.png'
 ```
 Running this file will train the cDCGAN and save the model in the specified location. Depending on the available hardware, the training process can take up to a few hours.
