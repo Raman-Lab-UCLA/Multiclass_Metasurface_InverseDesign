@@ -13,6 +13,8 @@ The following software is required to run the provided scripts. As of this writi
 
 -CUDA 10.2 (Recommended for training on GPU)
 
+-OpenCV (CV2) 3.4.2+
+
 -Scipy 1.6.2
 
 Installation instructions for Pytorch (with CUDA) is at: https://pytorch.org/
