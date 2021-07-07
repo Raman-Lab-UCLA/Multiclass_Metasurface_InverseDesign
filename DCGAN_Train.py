@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Sep  5 14:49:44 2019
-
-@author: cyyeu
-"""
 from __future__ import print_function
 from SaveAnimation import Video
-#%matplotlib inline
 import argparse
 import os
 import random
@@ -46,7 +40,7 @@ img_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Images_Hy
 def Excel_Tensor(spectra_path):
     # Location of excel data
     excelData = pd.read_csv(spectra_path, header = 0, index_col = 0)    
-    excelDataSpectra = excelData.iloc[:,:800]
+    excelDataSpectra = excelData.iloc[:,:800] #index until the last point of the spectra in the Excel file
     excelDataTensor = torch.tensor(excelDataSpectra.values).type(torch.FloatTensor)
     return excelData, excelDataSpectra, excelDataTensor
 
@@ -81,8 +75,8 @@ image_size = 64
 nc = 3 
 
 # Size of z latent vector (i.e. size of generator input)
-nz2 = 400
-nz = 800 + nz2
+latent = 400
+gan_input = excelDataTensor.size()[1] + latent
 
 # Size of feature maps in generator
 ngf = 128
@@ -105,7 +99,6 @@ ngpu = 1
 # Create the dataset. Use "dataset.imgs" to show filenames
 dataset = dset.ImageFolder(root=img_path,
                            transform=transforms.Compose([
-#                               transforms.Grayscale(1),  
                                transforms.Resize(image_size),
                                transforms.CenterCrop(image_size),
                                transforms.ToTensor(),
@@ -128,12 +121,11 @@ def weights_init(m):
         nn.init.constant_(m.bias.data, 0)
 
 # Generator Code
-
 class Generator(nn.Module):
     def __init__(self, ngpu):
         super(Generator, self).__init__()
         self.ngpu = ngpu            
-        self.conv1 = nn.ConvTranspose2d(nz, ngf * 8, 6, 1, 0, bias=False)
+        self.conv1 = nn.ConvTranspose2d(gan_input, ngf * 8, 6, 1, 0, bias=False)
         self.conv2 = nn.BatchNorm2d(ngf * 8)
         self.conv3 = nn.ReLU(True)
         # state size. (ngf*8) x 6 x 6
@@ -243,11 +235,10 @@ print(netD)
 # Initialize BCELoss function
 criterion = nn.BCELoss()
 
-
 # Create batch of latent vectors that we will use to visualize the progression of the generator
 testTensor = torch.Tensor()
 for i in range (100):
-    fixed_noise1 = torch.cat((excelDataTensor[i*int(np.floor(len(excelDataSpectra)/100))],torch.rand(nz2)))
+    fixed_noise1 = torch.cat((excelDataTensor[i*int(np.floor(len(excelDataSpectra)/100))],torch.rand(latent)))
     fixed_noise2 = fixed_noise1.unsqueeze(1).unsqueeze(1).unsqueeze(1)
     fixed_noise = fixed_noise2.permute(1,0,2,3)
     testTensor = torch.cat((testTensor,fixed_noise),0)
@@ -262,13 +253,11 @@ optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
 
 ## Training Loop
-
 # Lists to keep track of progress
 img_list = []
 G_losses = []
 D_losses = []
 iters = 0
-
 noise = torch.Tensor()
 noise2 = torch.Tensor()
 print("Starting Training Loop...")
@@ -298,7 +287,7 @@ for epoch in range(num_epochs):
             tensorA = excelDataTensor[excelIndex].view(1,800)
             noise2 = torch.cat((noise2,tensorA),0)      
             
-            tensor1 = torch.cat((excelDataTensor[excelIndex],torch.rand(nz2)))
+            tensor1 = torch.cat((excelDataTensor[excelIndex],torch.rand(latent)))
             tensor2 = tensor1.unsqueeze(1).unsqueeze(1).unsqueeze(1)         
             tensor3 = tensor2.permute(1,0,2,3)
             noise = torch.cat((noise,tensor3),0)         
