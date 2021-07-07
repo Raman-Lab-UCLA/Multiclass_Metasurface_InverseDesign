@@ -40,17 +40,14 @@ spectra_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/
 # Location to save models
 save_dir = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/'
 
-# Root directory for dataset
+# Root directory for dataset (images must be in a subdirectory within this folder)
 img_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Images_HybridGAN_Color'
 
 def Excel_Tensor(spectra_path):
     # Location of excel data
-    excelData = pd.read_csv(spectra_path, header = 0, index_col = 0)
-    
+    excelData = pd.read_csv(spectra_path, header = 0, index_col = 0)    
     excelDataSpectra = excelData.iloc[:,:800]
-    
     excelDataTensor = torch.tensor(excelDataSpectra.values).type(torch.FloatTensor)
-
     return excelData, excelDataSpectra, excelDataTensor
 
 excelData, excelDataSpectra, excelDataTensor = Excel_Tensor(spectra_path)
@@ -71,18 +68,17 @@ print("Random Seed: ", manualSeed)
 random.seed(manualSeed)
 torch.manual_seed(manualSeed)
 
-# Number of workers for dataloader
-workers = 1 ##CHRIS: Apparently windows issue - only works with 0 - workaround needed for other values: https://github.com/pytorch/pytorch/issues/2341
+# Number of workers for dataloader (for Windows workers must = 0, for reference: https://github.com/pytorch/pytorch/issues/2341)
+workers = 1 
 
 # Batch size during training
 batch_size = 16
 
-# Spatial size of training images. All images will be resized to this
-#   size using a transformer.
+# Spatial size of training images. All images will be resized to this size using a transformer.
 image_size = 64
 
 # Number of channels in the training images. For color images this is 3
-nc = 3 #########################################################################################################################
+nc = 3 
 
 # Size of z latent vector (i.e. size of generator input)
 nz2 = 400
@@ -106,16 +102,14 @@ beta1 = 0.5
 # Number of GPUs available. Use 0 for CPU mode.
 ngpu = 1
 
-# We can use an image folder dataset the way we have it setup.
-# Create the dataset
-# dataset.imgs --> Shows filenames
+# Create the dataset. Use "dataset.imgs" to show filenames
 dataset = dset.ImageFolder(root=img_path,
                            transform=transforms.Compose([
-#                               transforms.Grayscale(1),  #########################################################################################################################
+#                               transforms.Grayscale(1),  
                                transforms.Resize(image_size),
                                transforms.CenterCrop(image_size),
                                transforms.ToTensor(),
-                               transforms.Normalize([0.5],[0.5]) #########################################################################################################################
+                               transforms.Normalize([0.5],[0.5]) 
                            ]))
 # Create the dataloader
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
@@ -124,14 +118,7 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
 # Decide which device we want to run on
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 
-## Plot some training images
-#real_batch = next(iter(dataloader))
-#plt.figure(figsize=(8,8))
-#plt.axis("off")
-#plt.title("Training Images")
-#plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(device)[:64], padding=2, normalize=True).cpu(),(1,2,0)))
-
-# custom weights initialization called on netG and netD
+# Custom weights initialization called on netG and netD
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
@@ -145,12 +132,7 @@ def weights_init(m):
 class Generator(nn.Module):
     def __init__(self, ngpu):
         super(Generator, self).__init__()
-        self.ngpu = ngpu
-#        self.main = nn.Sequential(
-            # input is Z, going into a convolution
-#        self.l1 = nn.Linear(nz, 500, bias=False)   
-#        self.l2 = nn.Linear(500, 2, bias=False)   
-            
+        self.ngpu = ngpu            
         self.conv1 = nn.ConvTranspose2d(nz, ngf * 8, 6, 1, 0, bias=False)
         self.conv2 = nn.BatchNorm2d(ngf * 8)
         self.conv3 = nn.ReLU(True)
@@ -169,8 +151,7 @@ class Generator(nn.Module):
         # state size. (ngf) x 36 x 36
         self.conv13 = nn.ConvTranspose2d(ngf, nc, 6, 2, 4, bias=False)
         self.conv14 = nn.Tanh()
-            # state size. (nc) x 68 x 68
-#        )
+        # state size. (nc) x 68 x 68
 
     def forward(self, input):
         imageOut = input
@@ -187,11 +168,7 @@ class Generator(nn.Module):
         imageOut = self.conv11(imageOut)
         imageOut = self.conv12(imageOut)
         imageOut = self.conv13(imageOut)
-        imageOut = self.conv14(imageOut)       
-        
-#        propertyOut = input.squeeze()
-#        propertyOut = self.l1(propertyOut)
-#        propertyOut = self.l2(propertyOut)        
+        imageOut = self.conv14(imageOut)               
         return imageOut
 
 # Create the generator
@@ -201,8 +178,7 @@ netG = Generator(ngpu).to(device)
 if (device.type == 'cuda') and (ngpu > 1):
     netG = nn.DataParallel(netG, list(range(ngpu)))
 
-# Apply the weights_init function to randomly initialize all weights
-#  to mean=0, stdev=0.2.
+# Apply the weights_init function to randomly initialize all weights to mean=0, stdev=0.2.
 netG.apply(weights_init)
 
 # Print the model
@@ -212,15 +188,8 @@ class Discriminator(nn.Module):
     def __init__(self, ngpu):
         super(Discriminator, self).__init__()
         self.ngpu = ngpu
-#        self.main = nn.Sequential(             
-        self.l1 = nn.Linear(800, image_size*image_size*nc, bias=False)   
-#        self.l2 = nn.Linear(5000, 12288, bias=False)
-        # input is (nc) x 64 x 64`
-        
-#        self.p1 = nn.Linear(2,1000, bias=False)
-#        self.p2 = nn.Linear(1000,image_size*image_size, bias=False)
-        
-        self.conv1 = nn.Conv2d(2*nc, ndf, 6, 2, 4, bias=False) #########################################################################################################################
+        self.l1 = nn.Linear(800, image_size*image_size*nc, bias=False)           
+        self.conv1 = nn.Conv2d(2*nc, ndf, 6, 2, 4, bias=False) 
         self.conv2 = nn.LeakyReLU(0.2, inplace=True)
         # state size. (ndf) x 36 x 36
         self.conv3 = nn.Conv2d(ndf, ndf * 2, 6, 2, 5, bias=False)
@@ -237,16 +206,11 @@ class Discriminator(nn.Module):
         # state size. (ndf*8) x 6 x 6
         self.conv12 = nn.Conv2d(ndf * 8, 1, 6, 1, 0, bias=False)
         self.conv13 = nn.Sigmoid()
-#        )
 
     def forward(self, input, label):
         x1 = input
         x2 = self.l1(label)
-#        x2 = self.l2(x2) #########################################################################################################################
-        x2 = x2.reshape(int(b_size/ngpu),nc,image_size,image_size) #########################################################################################################################
-#        x3 = self.p1(properties)
-#        x3 = self.p2(x3)
-#        x3 = x3.reshape(int(b_size/ngpu),nc,image_size,image_size)
+        x2 = x2.reshape(int(b_size/ngpu),nc,image_size,image_size) 
         combine = torch.cat((x1,x2),1)
         combine = self.conv1(combine)
         combine = self.conv2(combine)
@@ -270,29 +234,24 @@ netD = Discriminator(ngpu).to(device)
 if (device.type == 'cuda') and (ngpu > 1):
     netD = nn.DataParallel(netD, list(range(ngpu)))
 
-# Apply the weights_init function to randomly initialize all weights
-#  to mean=0, stdev=0.2.
+# Apply the weights_init function to randomly initialize all weights to mean=0, stdev=0.2.
 netD.apply(weights_init)
 
 # Print the model
 print(netD)
 
-
 # Initialize BCELoss function
 criterion = nn.BCELoss()
 
-########################################################################################
-testTensor = torch.Tensor()
 
-# Create batch of latent vectors that we will use to visualize
-#  the progression of the generator
+# Create batch of latent vectors that we will use to visualize the progression of the generator
+testTensor = torch.Tensor()
 for i in range (100):
     fixed_noise1 = torch.cat((excelDataTensor[i*int(np.floor(len(excelDataSpectra)/100))],torch.rand(nz2)))
     fixed_noise2 = fixed_noise1.unsqueeze(1).unsqueeze(1).unsqueeze(1)
     fixed_noise = fixed_noise2.permute(1,0,2,3)
     testTensor = torch.cat((testTensor,fixed_noise),0)
 testTensor = testTensor.to(device)
-########################################################################################
 
 # Establish convention for real and fake labels during training
 real_label = random.uniform(0.9,1.0)
@@ -302,8 +261,7 @@ fake_label = 0
 optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
 
-
-# Training Loop
+## Training Loop
 
 # Lists to keep track of progress
 img_list = []
@@ -313,7 +271,6 @@ iters = 0
 
 noise = torch.Tensor()
 noise2 = torch.Tensor()
-#noise3 = torch.Tensor()
 print("Starting Training Loop...")
 # For each epoch
 x=0
@@ -345,13 +302,9 @@ for epoch in range(num_epochs):
             tensor2 = tensor1.unsqueeze(1).unsqueeze(1).unsqueeze(1)         
             tensor3 = tensor2.permute(1,0,2,3)
             noise = torch.cat((noise,tensor3),0)         
-            
-#            tensorProp = propDataTensor[excelIndex].view(1,2)
-#            noise3 = torch.cat((noise3,tensorProp),0)
-                  
+                              
         noise = noise.to(device)            
         noise2 = noise2.to(device)                
-#        noise3 = noise3.to(device)                
         
          # Forward pass real batch through D
         output = netD.forward(real_cpu,noise2).view(-1)
@@ -414,7 +367,6 @@ for epoch in range(num_epochs):
         iters += 1
         noise = torch.Tensor()
         noise2 = torch.Tensor()     
-#       noise3 = torch.Tensor()        
         x += 1
     if epoch % 50 == 0:
         ##Update folder location
@@ -429,10 +381,11 @@ print('Total Time Lapsed = %s Hours' % run_time)
 print('Total Time Lapsed = %s Hours' % run_time, file=f)
 f.close()
 
+#Save training progress video
 ims, ani = Video.save_video(save_dir, img_list, G_losses, D_losses)
 
 
-##G and D Training Loss
+##Plot and save G and D Training Losses
 plt.figure(figsize=(10,5))
 plt.title("Generator and Discriminator Loss During Training")
 plt.plot(G_losses,label="Generator Loss")
