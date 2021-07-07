@@ -45,7 +45,7 @@ img_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Images_Hy
 
 def Excel_Tensor(spectra_path):
     # Location of excel data
-    excelData = pd.read_csv('/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv', header = 0, index_col = 0)
+    excelData = pd.read_csv(spectra_path, header = 0, index_col = 0)
     
     excelDataSpectra = excelData.iloc[:,:800]
     
