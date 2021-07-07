@@ -33,7 +33,7 @@ img_path = 'C:/.../*.png'
 ```
 Running this file will train the cDCGAN and save the model in the specified location. Depending on the available hardware, the training process can take up to a few hours.
 
-### 2) Load cDCGAN & Predict (DCGAN_Predict.py)
+### 2) Load cDCGAN & Predict by Inputting Target Spectrum (DCGAN_Predict.py)
 
 ### 3) Decode Image & Convert to Binary (DCGAN_Decode.py)
 
