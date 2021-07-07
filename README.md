@@ -24,7 +24,7 @@ conda install -c anaconda scipy
 
 ## Steps
 ### 1) Train the cDCGAN (DCGAN_Train.py)
-Download the files in the 'Training Data' folder and update lines 38, 41, and 44 in the 'DCGAN.py' file:
+Download the files in the 'Training Data' folder and update lines 38, 41, and 44 in the 'DCGAN_Train.py' file:
 ```python
 ## Define File Locations (Images, Spectra, and CNN Model Save)
 spectra_path = 'C:/.../Spectra.csv'
