@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-from SaveAnimation import Video
+from Utilities.SaveAnimation import Video
 import argparse
 import os
 import random
