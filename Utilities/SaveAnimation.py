@@ -6,10 +6,6 @@ import matplotlib.animation as animation
 from IPython.display import HTML
 
 class Video:  
-    def __init__(self, folder, img_list, G_losses, D_losses):
-        folder = folder
-        self = self
-        
     def save_video(folder, img_list, G_losses, D_losses):
         plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg'
          
