@@ -63,7 +63,9 @@ class Generator(nn.Module):
         imageOut = self.conv14(imageOut)                   
         return imageOut
 
-def compare(i, factor, shift, results_folder):    
+def compare(i, factor, shift, results_folder):
+    
+    # Location of netG directory
     netGDir='/home/ramanlab/Documents/MachineLearning/GAN/HybridGAN (Color) - MIM+DM/GANs/v4/netG550.pt'
         
     ##Load Generator
