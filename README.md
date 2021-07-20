@@ -1,5 +1,7 @@
 # Multiclass_Metasurface_InverseDesign
-
+<p align="center">
+  <img src="https://github.com/Raman-Lab-UCLA/Multiclass_Metasurface_InverseDesign/blob/main/artwork/publication.PNG" width="700" />
+</p>
 
 ## Introduction
 Welcome to the Raman Lab GitHub! This repo will walk you through the code used in the following publication: https://onlinelibrary.wiley.com/doi/10.1002/adom.202100548
