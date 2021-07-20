@@ -16,10 +16,10 @@ import cv2
 import os
 
 #Location of Saved Generator
-netGDir='/home/ramanlab/Documents/MachineLearning/GAN/HybridGAN (Color) - MIM+DM/GANs/v4/netG550.pt'
+netGDir='C:/.../*.netG__.pt'
 
 #Location of Training Data
-spectra_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv'
+spectra_path = 'C:/.../absorptionData_HybridGAN.csv'
 
 #Restoring Classes and Variables
 class Generator(nn.Module):
