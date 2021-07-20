@@ -32,6 +32,7 @@ class Binary():
         folder = results_folder  # Set 
         path = folder+'*-bw.png'
         filenames = glob.glob(path)
+        filenames.sort()
         imgs = load_images(path) # load images
         imgs = np.asarray(imgs)
         print(np.shape(imgs))
