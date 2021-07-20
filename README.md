@@ -58,16 +58,25 @@ save_dir = 'C:/.../'
 #Root directory for dataset (images must be in a subdirectory within this folder)
 img_path = 'C:/.../Images'
 ```
-Running this file will train the cDCGAN and save the models in the specified location (every 50 epochs). Depending on the available hardware, the training process can take up to a few hours. After training, the following will also be produced:
+Running this file will train the cDCGAN and save the models in the specified location (every 50 epochs). Multiple generators are saved since model performance depends on trained epochs. Based on our tests, the optimal generator is at about 500 epochs. Depending on the available hardware, the training process can take up to a few hours. After training, the following files will also be produced:
 
-## 1.1) Log file showing losses and total training time:
+#### 1.1) Log file showing losses and total training time (training_log.txt): 
 
-## 1.2) Video showing generator outputs per epoch:
+#### 1.2) Video showing generator outputs per epoch (animation.mp4):
 
-## 1.3) Plots of Generator and Discriminator losses:
+#### 1.3) Plots of Generator and Discriminator losses (losses.png):
+
+For more detailed interpretation of the losses, please refer to: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
 
 ### 2) Load cDCGAN & Predict by Inputting Target Spectrum (DCGAN_Predict.py)
+Update the following lines in the 'DCGAN_Predict.py' file:
+```python
+#Location of Saved Generator
+netGDir='C:/.../*.netG__.pt'
 
-### 3) Decode Image & Convert to Binary (DCGAN_Decode.py)
+#Location of Training Data
+spectra_path = 'C:/.../absorptionData_HybridGAN.csv'
+```
+Running this file will pass several spectra into the GAN, thereby producing multiple colored images. Colored images are converted to black and white, then to binary for importing into Lumerical (commercial EM solver). Material properties are saved in the 'properties.txt' file. 
 
-### 4) Generate Simulation Model - Lumerical (DCGAN_FDTD.py)
+### 3) Generate Simulation Model - Lumerical (DCGAN_FDTD.lsf)
