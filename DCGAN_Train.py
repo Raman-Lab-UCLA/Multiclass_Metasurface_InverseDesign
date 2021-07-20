@@ -29,13 +29,13 @@ print("CUDA Device Count: {}".format(torch.cuda.device_count()))
 print("CUDA Device Name: {}".format(torch.cuda.get_device_name(0)))
 
 #Location of Training Data
-spectra_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv'
+spectra_path = 'C:/.../absorptionData_HybridGAN.csv'
 
 #Location to Save Models (Generators and Discriminators)
-save_dir = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/'
+save_dir = 'C:/.../'
 
 #Root directory for dataset (images must be in a subdirectory within this folder)
-img_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Images_HybridGAN_Color'
+img_path = 'C:/.../Images'
 
 def Excel_Tensor(spectra_path):
     # Location of excel data
