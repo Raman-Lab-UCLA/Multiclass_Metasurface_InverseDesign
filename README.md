@@ -61,10 +61,22 @@ img_path = 'C:/.../Images'
 Running this file will train the cDCGAN and save the models in the specified location (every 50 epochs). Multiple generators are saved since model performance depends on trained epochs. Based on our tests, the optimal generator is at about 500 epochs. Depending on the available hardware, the training process can take up to a few hours. After training, the following files will also be produced:
 
 #### 1.1) Log file showing losses and total training time (training_log.txt): 
+```python
 
+Start Time = Thu Jul  1 11:02:47 2021
+[0/500][0/1174]	Loss_D: 2.0491	Loss_G: 19.2079	D(x): 0.6574	D(G(z)): 0.6823 / 0.0000
+[0/500][50/1174]	Loss_D: 4.1192	Loss_G: 6.7932	D(x): 0.6742	D(G(z)): 0.9405 / 0.0028
+...
+```
 #### 1.2) Video showing generator outputs per epoch (animation.mp4):
+<p align="center">
+  <img src="https://github.com/Raman-Lab-UCLA/Multiclass_Metasurface_InverseDesign/blob/main/artwork/animation.gif" width="400" />
+</p>
 
 #### 1.3) Plots of Generator and Discriminator losses (losses.png):
+<p align="center">
+  <img src="https://github.com/Raman-Lab-UCLA/Multiclass_Metasurface_InverseDesign/blob/main/artwork/losses.png" width="400" />
+</p>
 
 For more detailed interpretation of the losses, please refer to: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
 
