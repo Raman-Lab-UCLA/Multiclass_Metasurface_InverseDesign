@@ -20,7 +20,13 @@ import pandas as pd
 import cv2
 import os
 
-##Restoring Classes and Variables
+#Location of Saved Generator
+netGDir='/home/ramanlab/Documents/MachineLearning/GAN/HybridGAN (Color) - MIM+DM/GANs/v4/netG550.pt'
+
+#Location of Training Data
+spectra_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv'
+
+#Restoring Classes and Variables
 class Generator(nn.Module):
     def __init__(self, ngpu):
         super(Generator, self).__init__()
@@ -63,16 +69,13 @@ class Generator(nn.Module):
         imageOut = self.conv14(imageOut)                   
         return imageOut
 
-def compare(i, factor, shift, results_folder):
-    
-    # Location of netG directory
-    netGDir='/home/ramanlab/Documents/MachineLearning/GAN/HybridGAN (Color) - MIM+DM/GANs/v4/netG550.pt'
-        
+def compare(i, factor, shift, results_folder, netGDir, spectra_path):
+            
     ##Load Generator
     netG = torch.load(netGDir, map_location='cpu')
     
     ##Create Generator Input
-    excelTestData = pd.read_csv('/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv', index_col = 0)
+    excelTestData = pd.read_csv(spectra_path, index_col = 0)
     
     #for z in range(shift):
         #excelTestData.insert(0,str(z),0)
@@ -91,22 +94,11 @@ def compare(i, factor, shift, results_folder):
     img_reshape = fake.permute(0,2,3,1)
     img = img_reshape.squeeze()
     img = img.numpy()
-    
-    
-    excelTestDataNames = pd.read_csv('/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv')
+       
+    excelTestDataNames = pd.read_csv(spectra_path)
     name = excelTestDataNames.iloc[index,0]
-    #name = name[:-10]
-    print(name)
-    
-    #real = plt.imread(os.path.join('/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Images_HybridGAN_Color/Images_HybridGAN_Color/Images', name + '-colorprops.png'))
-    
+    print(name)      
     img = (img + 1)/2
-    
-    #comparison = np.concatenate((img, real), axis = 1)
-    
-    #plt.imshow(comparison)
-    #plt.imsave(verName + '-' + str(i) + '-comparison.png',comparison)
-    
     
     im_size = 64
     pmax = 4.0
@@ -155,11 +147,7 @@ def compare(i, factor, shift, results_folder):
     preal = excelTestData.iloc[index, 801]
     treal = excelTestData.iloc[index, 802]
     ereal = excelTestData.iloc[index, 803]
-    
-    # GAUSSIAN FILTER
-    #img_filter = scipy.ndimage.gaussian_filter(test,sigma=0.75)
-    #ret, img_filter = cv2.threshold(img_filter,0.1,1,cv2.THRESH_BINARY) # 0 = black, 1 = white; everything under first number to black
-        
+            
     plt.imshow(img)
     plt.imsave(results_folder+ '/Results/' + str(i) + '-test.png',img)
     
@@ -178,7 +166,7 @@ def compare(i, factor, shift, results_folder):
     
     return [pindexfake, pindexreal, tfake, treal, classifier]
 
-#%% def test(verName):
+#Pass Sspectra into Generator
 indices = [0, 2016, 5308, 8936, 10680, 17000]
 # indices = []
 # for index in range(0,63):
@@ -188,7 +176,7 @@ Path(results_folder+ '/Results').mkdir(parents=True, exist_ok=True) #ref: https:
 file = open(results_folder + '/Results/properties.txt',"w")
 file.write("Index FakePlasma/Index RealPlasma/Index FakeThickness RealThickness Class(MIM=0/DM=1)")
 for i in indices:
-    props = compare(i, 1, 0, results_folder)
+    props = compare(i, 1, 0, results_folder, netGDir, spectra_path)
     props.insert(0, i)
     row = ""
     for j in props:
@@ -196,12 +184,9 @@ for i in indices:
     file.write("\n" + row)
 file.close()
 
-#%%
-# def bwtests():
+#Convert Images to Black and White
 im_size = 64
 im_path = results_folder+ '/Results/*-test.png'
-
-
 imgFolder = glob.glob(im_path)
 imgFolder.sort()
 
@@ -221,12 +206,13 @@ for img in imgFolder:
     gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
     cv2.normalize(gray, gray, -1, 1, cv2.NORM_MINMAX)
     
-    #GAUSSIAN FILTER
+    #Apply Gaussian Filter
     img_filter = scipy.ndimage.gaussian_filter(gray,sigma=0.75)
     ret, img_filter = cv2.threshold(img_filter,0.1,1,cv2.THRESH_BINARY) # 0 = black, 1 = white; everything under first number to black
     
     plt.imshow(img_filter, cmap = "gray")
     plt.imsave(img[:-4]+'-bw.png', img_filter, cmap = "gray")
 
+#Convert B/W Images to Binary (for Lumerical)    
 Binary.convert(results_folder)
 
