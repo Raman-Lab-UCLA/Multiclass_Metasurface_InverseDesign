@@ -45,8 +45,8 @@ Go to the 'Utilities/SaveAnimation.py' file and update the following line to set
 ```python
 plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg'
 ```
-Refer to here for more information: https://stackoverflow.com/questions/23856990/cant-save-matplotlib-animation
-Optionally, comment out the save_video line in 'DCGAN_Train.py'.
+Refer to here for more information: https://stackoverflow.com/questions/23856990/cant-save-matplotlib-animation.
+Alternatively, comment out the save_video line in 'DCGAN_Train.py'.
 
 ### 1) Train the cDCGAN (DCGAN_Train.py)
 Download the files in the 'Training Data' folder and update the following lines in the 'DCGAN_Train.py' file:
@@ -64,12 +64,12 @@ Running this file will train the cDCGAN and save the models in the specified loc
 
 #### 1.1) Log file showing losses and total training time (training_log.txt): 
 ```python
-
 Start Time = Thu Jul  1 11:02:47 2021
 [0/500][0/1174]	Loss_D: 2.0491	Loss_G: 19.2079	D(x): 0.6574	D(G(z)): 0.6823 / 0.0000
 [0/500][50/1174]	Loss_D: 4.1192	Loss_G: 6.7932	D(x): 0.6742	D(G(z)): 0.9405 / 0.0028
 ...
 ```
+
 #### 1.2) Video showing generator outputs per epoch (animation.mp4):
 <p align="center">
   <img src="https://github.com/Raman-Lab-UCLA/Multiclass_Metasurface_InverseDesign/blob/main/artwork/animation.gif" width="400" />
