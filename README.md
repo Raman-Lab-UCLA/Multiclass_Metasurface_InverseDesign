@@ -2,7 +2,7 @@
 
 
 ## Introduction
-Welcome to the Raman Lab GitHub! This repo will walk you through the code used in the following publication: ___
+Welcome to the Raman Lab GitHub! This repo will walk you through the code used in the following publication: https://onlinelibrary.wiley.com/doi/10.1002/adom.202100548
 
 Here, we use a conditional deep convolutional generative adversarial network (cDCGAN) to inverse design across multiple classes of metasurfaces.
 
@@ -38,15 +38,33 @@ conda install spyder
 ```
 
 ## Steps
-### 1) Train the cDCGAN (DCGAN_Train.py)
-Download the files in the 'Training Data' folder and update lines 38, 41, and 44 in the 'DCGAN_Train.py' file:
+### 0) Setup ffmpeg:
+Go to the 'Utilities/SaveAnimation.py' file and update the following line to setup 'ffmpeg':
 ```python
-## Define File Locations (Images, Spectra, and CNN Model Save)
-spectra_path = 'C:/.../Spectra.csv'
-save_dir = 'C:/.../model.h5'
-img_path = 'C:/.../*.png'
+plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg'
 ```
-Running this file will train the cDCGAN and save the model in the specified location. Depending on the available hardware, the training process can take up to a few hours.
+Refer to here for more information: https://stackoverflow.com/questions/23856990/cant-save-matplotlib-animation
+Optionally, comment out the save_video line in 'DCGAN_Train.py'.
+
+### 1) Train the cDCGAN (DCGAN_Train.py)
+Download the files in the 'Training Data' folder and update the following lines in the 'DCGAN_Train.py' file:
+```python
+#Location of Training Data
+spectra_path = 'C:/.../absorptionData_HybridGAN.csv'
+
+#Location to Save Models (Generators and Discriminators)
+save_dir = 'C:/.../'
+
+#Root directory for dataset (images must be in a subdirectory within this folder)
+img_path = 'C:/.../Images'
+```
+Running this file will train the cDCGAN and save the models in the specified location (every 50 epochs). Depending on the available hardware, the training process can take up to a few hours. After training, the following will also be produced:
+
+## 1.1) Log file showing losses and total training time:
+
+## 1.2) Video showing generator outputs per epoch:
+
+## 1.3) Plots of Generator and Discriminator losses:
 
 ### 2) Load cDCGAN & Predict by Inputting Target Spectrum (DCGAN_Predict.py)
 
