@@ -1,0 +1,86 @@
+imagefolder = dir;
+files = splitstring(imagefolder,endl); 
+
+M = readdata('properties.txt');
+
+for(i=1:length(files)) {          # loop over all files
+ if (findstring(files{i},"txt") != -1) {  # look for 'txt' files
+  if (fileexists(files{i}) & (files{i} != 'properties.txt')) {  # skip properties.txt
+   ?files{i};               # output file name
+   
+   pos1 = findstring(files{i}, "-");
+   #pos2 = findstring(files{i}, "-", pos1+1);
+   numStr = substring(files{i}, 1, pos1-1);
+   index = str2num(numStr);
+   j = find(M == index);
+   j = j(1);
+   
+   if(M(j,6) == 0){
+       load("Master.fsp");
+       switchtolayout;
+       addimport;
+       importbinary(files{i}, 'microns');  # load file
+       p = M(j,2);
+       if (p < 2.1155){
+           m = 'Au (Gold) - Palik Copy 1';
+       }
+       else if (p > 2.9455){
+           m = 'Al (Aluminium) - CRC';
+       }
+       else{
+           m = 'Ag (Silver) - CRC';
+       }
+       select('import');
+       set('material', m); 
+       set('x span', 3.2e-6); 
+       set('y span', 3.2e-6); 
+       set('z span', 0.1e-6); 
+       set('x', 0); 
+       set('y', 0); 
+       set('z', 0.05e-6);
+
+       t = M(j,4);
+       selectpartial('substrate::spacer');
+       set('z min',-t*1e-7);
+       selectpartial('substrate::mirror');
+       set('z max',-t*1e-7);
+       set('z min',(-t-2)*1e-7);
+       selectpartial('FDTD');
+       set('z min',(-t-2)*1e-7);
+   }
+   else{
+       load("Master(DielectricMetal).fsp");
+       switchtolayout;       
+       addimport;
+       importbinary(files{i}, 'microns');  # load file
+       p = M(j,2);
+       if (p < 2.915){
+           m = 'ZnSe';
+       }
+       else if (p > 3.715){
+           m = 'Ge (Germanium) - Palik';
+       }
+       else{
+           m = 'Si (Silicon) - Palik';
+       }
+       
+       select('import');
+       t = M(j,4);
+       set('material', m); 
+       set('x span', 7.5e-6); 
+       set('y span', 7.5e-6); 
+       set('z min', -0.2e-6); 
+       set('z max', (-2+t)*1e-7);
+       set('x', 0); 
+       set('y', 0); 
+       set('z', 0.05e-6);
+   }
+
+   filename_split = splitstring(files{i},'txt');
+   filename = filename_split{1};
+   save(filename);
+   
+   select('import');
+  }
+ }
+}
