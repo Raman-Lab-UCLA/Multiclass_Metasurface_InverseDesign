@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Sep  5 15:47:30 2019
-
-@author: cyyeu
-"""
 from __future__ import print_function
 from Utilities.ConvertImageToBinary import Binary
 from pathlib import Path
