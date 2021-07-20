@@ -90,5 +90,8 @@ netGDir='C:/.../*.netG__.pt'
 spectra_path = 'C:/.../absorptionData_HybridGAN.csv'
 ```
 Running this file will pass several spectra into the GAN, thereby producing multiple colored images. Colored images are converted to black and white, then to binary for importing into Lumerical (commercial EM solver). Material properties are saved in the 'properties.txt' file. 
+<p align="center">
+  <img src="https://github.com/Raman-Lab-UCLA/Multiclass_Metasurface_InverseDesign/blob/main/artwork/predict.png" width="400" />
+</p>
 
 ### 3) Generate Simulation Model - Lumerical (DCGAN_FDTD.lsf)
