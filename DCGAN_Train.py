@@ -28,13 +28,13 @@ print("CUDA is available: {}".format(torch.cuda.is_available()))
 print("CUDA Device Count: {}".format(torch.cuda.device_count()))
 print("CUDA Device Name: {}".format(torch.cuda.get_device_name(0)))
 
-# Location of training data
+#Location of Training Data
 spectra_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/absorptionData_HybridGAN.csv'
 
-# Location to save models
+#Location to Save Models (Generators and Discriminators)
 save_dir = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Data/'
 
-# Root directory for dataset (images must be in a subdirectory within this folder)
+#Root directory for dataset (images must be in a subdirectory within this folder)
 img_path = '/home/ramanlab/Documents/MachineLearning/GAN/_TrainingData/Images_HybridGAN_Color'
 
 def Excel_Tensor(spectra_path):
@@ -55,48 +55,48 @@ print('Start Time = %s' % local_time, file=f)
 #Does not truncate tensor contents (Can set "Default")
 torch.set_printoptions(profile="full")
 
-# Set random seed for reproducibility
+#Set random seed for reproducibility
 manualSeed = 999
 #manualSeed = random.randint(1, 10000) # use if you want new results
 print("Random Seed: ", manualSeed)
 random.seed(manualSeed)
 torch.manual_seed(manualSeed)
 
-# Number of workers for dataloader (for Windows workers must = 0, for reference: https://github.com/pytorch/pytorch/issues/2341)
+#Number of workers for dataloader (for Windows workers must = 0, for reference: https://github.com/pytorch/pytorch/issues/2341)
 workers = 1 
 
-# Batch size during training
+#Batch size during training
 batch_size = 16
 
-# Spatial size of training images. All images will be resized to this size using a transformer.
+#Spatial size of training images. All images will be resized to this size using a transformer.
 image_size = 64
 
-# Number of channels in the training images. For color images this is 3
+#Number of channels in the training images. For color images this is 3
 nc = 3 
 
-# Size of z latent vector (i.e. size of generator input)
+#Size of z latent vector (i.e. size of generator input)
 latent = 400
 gan_input = excelDataTensor.size()[1] + latent
 
-# Size of feature maps in generator
+#Size of feature maps in generator
 ngf = 128
 
-# Size of feature maps in discriminator
+#Size of feature maps in discriminator
 ndf = 64
 
-# Number of training epochs
+#Number of training epochs
 num_epochs = 1
 
-# Learning rate for optimizers
+#Learning rate for optimizers
 lr = 0.0001
 
-# Beta1 hyperparam for Adam optimizers
+#Beta1 hyperparam for Adam optimizers
 beta1 = 0.5
 
-# Number of GPUs available. Use 0 for CPU mode.
+#Number of GPUs available. Use 0 for CPU mode.
 ngpu = 1
 
-# Create the dataset. Use "dataset.imgs" to show filenames
+#Create the dataset. Use "dataset.imgs" to show filenames
 dataset = dset.ImageFolder(root=img_path,
                            transform=transforms.Compose([
                                transforms.Resize(image_size),
@@ -104,14 +104,14 @@ dataset = dset.ImageFolder(root=img_path,
                                transforms.ToTensor(),
                                transforms.Normalize([0.5],[0.5]) 
                            ]))
-# Create the dataloader
+#Create the dataloader
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
                                          shuffle=False, num_workers=workers)
 
-# Decide which device we want to run on
+#Decide which device we want to run on
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 
-# Custom weights initialization called on netG and netD
+#Custom weights initialization called on netG and netD
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
@@ -120,7 +120,7 @@ def weights_init(m):
         nn.init.normal_(m.weight.data, 1.0, 0.02)
         nn.init.constant_(m.bias.data, 0)
 
-# Generator Code
+#Generator Code
 class Generator(nn.Module):
     def __init__(self, ngpu):
         super(Generator, self).__init__()
@@ -163,17 +163,17 @@ class Generator(nn.Module):
         imageOut = self.conv14(imageOut)               
         return imageOut
 
-# Create the generator
+#Create the generator
 netG = Generator(ngpu).to(device)
 
-# Handle multi-gpu if desired
+#Handle multi-gpu if desired
 if (device.type == 'cuda') and (ngpu > 1):
     netG = nn.DataParallel(netG, list(range(ngpu)))
 
-# Apply the weights_init function to randomly initialize all weights to mean=0, stdev=0.2.
+#Apply the weights_init function to randomly initialize all weights to mean=0, stdev=0.2.
 netG.apply(weights_init)
 
-# Print the model
+#Print the model
 print(netG)
 
 class Discriminator(nn.Module):
@@ -219,23 +219,23 @@ class Discriminator(nn.Module):
         combine = self.conv13(combine)
         return combine
 
-# Create the Discriminator
+#Create the Discriminator
 netD = Discriminator(ngpu).to(device)
 
-# Handle multi-gpu if desired
+#Handle multi-gpu if desired
 if (device.type == 'cuda') and (ngpu > 1):
     netD = nn.DataParallel(netD, list(range(ngpu)))
 
-# Apply the weights_init function to randomly initialize all weights to mean=0, stdev=0.2.
+#Apply the weights_init function to randomly initialize all weights to mean=0, stdev=0.2.
 netD.apply(weights_init)
 
-# Print the model
+#Print the model
 print(netD)
 
-# Initialize BCELoss function
+#Initialize BCELoss function
 criterion = nn.BCELoss()
 
-# Create batch of latent vectors that we will use to visualize the progression of the generator
+#Create batch of latent vectors that we will use to visualize the progression of the generator
 testTensor = torch.Tensor()
 for i in range (100):
     fixed_noise1 = torch.cat((excelDataTensor[i*int(np.floor(len(excelDataSpectra)/100))],torch.rand(latent)))
@@ -244,16 +244,16 @@ for i in range (100):
     testTensor = torch.cat((testTensor,fixed_noise),0)
 testTensor = testTensor.to(device)
 
-# Establish convention for real and fake labels during training
+#Establish convention for real and fake labels during training
 real_label = random.uniform(0.9,1.0)
 fake_label = 0
 
-# Setup Adam optimizers for both G and D
+#Setup Adam optimizers for both G and D
 optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
 
-## Training Loop
-# Lists to keep track of progress
+##Training Loop
+#Lists to keep track of progress
 img_list = []
 G_losses = []
 D_losses = []
@@ -261,7 +261,7 @@ iters = 0
 noise = torch.Tensor()
 noise2 = torch.Tensor()
 print("Starting Training Loop...")
-# For each epoch
+#For each epoch
 x=0
 for epoch in range(num_epochs):
     x=0
@@ -370,11 +370,12 @@ print('Total Time Lapsed = %s Hours' % run_time)
 print('Total Time Lapsed = %s Hours' % run_time, file=f)
 f.close()
 
+
 #Save training progress video
 ims, ani = Video.save_video(save_dir, img_list, G_losses, D_losses)
 
 
-##Plot and save G and D Training Losses
+#Plot and save G and D Training Losses
 plt.figure(figsize=(10,5))
 plt.title("Generator and Discriminator Loss During Training")
 plt.plot(G_losses,label="Generator Loss")
