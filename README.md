@@ -124,7 +124,7 @@ As stated in the publication, we believe our approach can be applied to any/diff
 
 • Changes to Generator/Discriminator hyperparameters (in 'DCGAN_Train.py') must be accompanied by the same changes to 'DCGAN_Predict.py', since Pytorch requires that the model be redefined when loading it from scratch. 
 
-### Reference
+### Citation
 If you find this repo helpful, or use any of the code you find here, please cite our work using the following: 
 ```python
 C. Yeung, et al. Global Inverse Design across Multiple Photonic Structure Classes Using Generative Deep Learning. Advanced Optical Materials, 2021. 
