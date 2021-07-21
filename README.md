@@ -42,11 +42,11 @@ conda install spyder
 
 ## Steps
 ### 0) Setup 'ffmpeg':
-Go to the 'Utilities/SaveAnimation.py' file and update the following line to setup 'ffmpeg':
+Go to the 'Utilities/SaveAnimation.py' file and update the following line to setup 'ffmpeg' (Linux):
 ```python
-plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg.exe'
+plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg'
 ```
-Refer to here for more information: https://stackoverflow.com/questions/23856990/cant-save-matplotlib-animation.
+Refer to here for more information (or for working on Windows): https://stackoverflow.com/questions/23856990/cant-save-matplotlib-animation.
 Alternatively, comment out the 'save_video' line in 'DCGAN_Train.py'.
 
 ### 1) Train the cDCGAN (DCGAN_Train.py)
