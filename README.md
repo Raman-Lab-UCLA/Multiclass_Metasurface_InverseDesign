@@ -18,6 +18,7 @@ The following software is required to run the provided scripts. As of this writi
 -CUDA 10.2 (Recommended for training on GPU)
 
 -OpenCV 3.4.2 (Depends on Python 3.7, Python 3.8 is not supported as of this writing)
+
 -Scipy 1.6.2
 
 -Matplotlib
