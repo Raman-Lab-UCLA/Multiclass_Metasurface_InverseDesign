@@ -116,9 +116,9 @@ As stated in the publication, we believe our approach can be applied to any/diff
 
 • Use a column/row definition of training data, where the columns are number of design parameters and rows are design instances. 
 
-• Add a grayscale transformation when defining the dataset if black and white images are prefered. 
+• If grayscale images are prefered, a grayscale transformation is needed when defining the dataset. 
 
-• Related to the above point, changes in image dimensions or channels should be accompanied by corresponding changes to the Generator/Discriminator inputs (at the first layer).
+• Related to the above point, changes in image dimensions or channels should be accompanied by corresponding changes to 'nc' field.
 
 • Most of the 'DCGAN_Predict.py' script is not needed (lines 93 and beyond) if you only want to generate images using the DCGAN. The rest of the code here is for custom Lumerical support, but play close attention to lines 70-91 for loading and passing inputs into the generator. 
 
