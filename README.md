@@ -47,7 +47,7 @@ Go to the 'Utilities/SaveAnimation.py' file and update the following line to set
 plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg'
 ```
 Refer to here for more information: https://stackoverflow.com/questions/23856990/cant-save-matplotlib-animation.
-Alternatively, comment out the save_video line in 'DCGAN_Train.py'.
+Alternatively, comment out the 'save_video' line in 'DCGAN_Train.py'.
 
 ### 1) Train the cDCGAN (DCGAN_Train.py)
 Download the files in the 'Training Data' and 'Results' folders and update the following lines in the 'DCGAN_Train.py' file:
@@ -82,6 +82,12 @@ Start Time = Thu Jul  1 11:02:47 2021
 </p>
 
 For more detailed interpretation of the losses, please refer to: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
+
+*Note: if you get the following error: 
+```python
+BrokenPipeError: [Errno 32] Broken pipe
+```
+you are probably running on Windows and need to set 'workers = 0'. More details are described in the script comments.
 
 ### 2) Load cDCGAN & Predict by Inputting Target Spectrum (DCGAN_Predict.py)
 Update the following lines in the 'DCGAN_Predict.py' file:
