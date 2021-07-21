@@ -61,7 +61,7 @@ save_dir = 'C:/.../'
 #Root directory for dataset (images must be in a subdirectory within this folder)
 img_path = 'C:/.../Images'
 ```
-Running this file will train the cDCGAN and save the models in the specified location (every 50 epochs). Multiple generators are saved since model performance depends on trained epochs. Based on our tests, the optimal generator is at about 500 epochs. Depending on the available hardware, the training process can take up to a few hours. After training, the following files will also be produced:
+Running this file will train the cDCGAN and save the models in the specified location (every 50 epochs). Since model performance depends on trained epochs, multiple generators are saved in a single training session. Based on our tests with our training data, the optimal generator is at about 500 epochs (which may differ for different datasets). Depending on the available hardware, the training process can take up to a few hours. After training, the following files will also be produced:
 
 #### 1.1) Log file showing losses and total training time (training_log.txt): 
 ```python
