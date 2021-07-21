@@ -113,10 +113,15 @@ you are probably running on Windows and need to set 'workers = 0'. More details 
 
 #### 4.2) How to Generalize the Code
 As stated in the publication, we believe our approach can be applied to any/different material design problems. However, several changes must be made, which may not be obvious at first glance if you are not familiar with Python/Pytorch. Here are several recommendations on how to adapt the code to different design problems:
+
 • Use a column/row definition of training data, where the columns are number of design parameters and rows are design instances. 
+
 • Add a grayscale transformation when defining the dataset if black and white images are prefered. 
-• Related to the above point, changes in image dimensions or channels should be accompanied by corresponding changes to the Generator/Discriminator inputs (at the first layer). 
+
+• Related to the above point, changes in image dimensions or channels should be accompanied by corresponding changes to the Generator/Discriminator inputs (at the first layer).
+
 • Most of the 'DCGAN_Predict.py' script is not needed (lines 93 and beyond) if you only want to generate images using the DCGAN. The rest of the code here is for custom Lumerical support, but play close attention to lines 70-91 for loading and passing inputs into the generator. 
+
 • Changes to Generator/Discriminator hyperparameters (in 'DCGAN_Train.py') must be accompanied by the same changes to 'DCGAN_Predict.py', since Pytorch requires that the model be redefined when loading it from scratch. 
 
 ### Reference
