@@ -23,6 +23,8 @@ The following software is required to run the provided scripts. As of this writi
 
 -Matplotlib
 
+-ffmpeg
+
 -Pandas
 
 -Spyder 
@@ -36,6 +38,7 @@ conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 conda install -c anaconda opencv
 conda install -c anaconda scipy
 conda install matplotlib
+conda install -c conda-forge ffmpeg
 conda install pandas
 conda install spyder
 ```
