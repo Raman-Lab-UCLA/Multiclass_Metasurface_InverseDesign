@@ -7,7 +7,7 @@ from IPython.display import HTML
 
 class Video:  
     def save_video(folder, img_list, G_losses, D_losses):
-        plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg'
+        plt.rcParams['animation.ffmpeg_path'] = '/home/ramanlab/anaconda3/pkgs/ffmpeg-3.1.3-0/bin/ffmpeg.exe'
          
          #%%capture
         fig = plt.figure(figsize=(8,8))
