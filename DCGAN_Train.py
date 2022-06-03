@@ -85,7 +85,7 @@ ngf = 128
 ndf = 64
 
 #Number of training epochs
-num_epochs = 1
+num_epochs = 500
 
 #Learning rate for optimizers
 lr = 0.0001
@@ -128,22 +128,17 @@ class Generator(nn.Module):
         self.conv1 = nn.ConvTranspose2d(gan_input, ngf * 8, 6, 1, 0, bias=False)
         self.conv2 = nn.BatchNorm2d(ngf * 8)
         self.conv3 = nn.ReLU(True)
-        # state size. (ngf*8) x 6 x 6
         self.conv4 = nn.ConvTranspose2d(ngf * 8, ngf * 4, 6, 2, 2, bias=False)
         self.conv5 = nn.BatchNorm2d(ngf * 4)
         self.conv6 = nn.ReLU(True)
-        # state s7ze. (ngf*4) x 12 x 12
         self.conv7 = nn.ConvTranspose2d(ngf * 4, ngf * 2, 6, 2, 4, bias=False)
         self.conv8 = nn.BatchNorm2d(ngf * 2)
         self.conv9 = nn.ReLU(True)
-        # state size. (ngf*2) x 20 x 20
         self.conv10 = nn.ConvTranspose2d(ngf * 2, ngf, 6, 2, 5, bias=False)
         self.conv11 = nn.BatchNorm2d(ngf)
         self.conv12 = nn.ReLU(True)
-        # state size. (ngf) x 36 x 36
         self.conv13 = nn.ConvTranspose2d(ngf, nc, 6, 2, 4, bias=False)
         self.conv14 = nn.Tanh()
-        # state size. (nc) x 68 x 68
 
     def forward(self, input):
         imageOut = input
@@ -183,19 +178,15 @@ class Discriminator(nn.Module):
         self.l1 = nn.Linear(800, image_size*image_size*nc, bias=False)           
         self.conv1 = nn.Conv2d(2*nc, ndf, 6, 2, 4, bias=False) 
         self.conv2 = nn.LeakyReLU(0.2, inplace=True)
-        # state size. (ndf) x 36 x 36
         self.conv3 = nn.Conv2d(ndf, ndf * 2, 6, 2, 5, bias=False)
         self.conv4 = nn.BatchNorm2d(ndf * 2)
         self.conv5 = nn.LeakyReLU(0.2, inplace=True)
-        # state size. (ndf*2) x 20 x 20
         self.conv6 = nn.Conv2d(ndf * 2, ndf * 4, 6, 2, 4, bias=False)
         self.conv7 = nn.BatchNorm2d(ndf * 4)
         self.conv8 = nn.LeakyReLU(0.2, inplace=True)
-        # state size. (ndf*4) x 12 x 12
         self.conv9 = nn.Conv2d(ndf * 4, ndf * 8, 6, 2, 2, bias=False)
         self.conv10 = nn.BatchNorm2d(ndf * 8)
         self.conv11 = nn.LeakyReLU(0.2, inplace=True)
-        # state size. (ndf*8) x 6 x 6
         self.conv12 = nn.Conv2d(ndf * 8, 1, 6, 1, 0, bias=False)
         self.conv13 = nn.Sigmoid()
 
